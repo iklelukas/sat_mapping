@@ -1,0 +1,7 @@
+six
+crcmod
+lxml
+setuptools
+matplotlib
+numpy
+Glymur

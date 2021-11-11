@@ -1,0 +1,20 @@
+include src/sat_mapping/Lib/gsutil/CHANGES.md
+include src/sat_mapping/Lib/gsutil/CHECKSUM
+include src/sat_mapping/Lib/gsutil/CONTRIBUTING.md
+include src/sat_mapping/Lib/gsutil/LICENSE
+include src/sat_mapping/Lib/gsutil/README.md
+include src/sat_mapping/Lib/gsutil/VERSION
+include src/sat_mapping/Lib/gsutil/gsutil
+include src/sat_mapping/Lib/gsutil/gsutil.py
+include src/sat_mapping/Lib/gsutil/setup.py
+recursive-include src/sat_mapping/Lib/gsutil/gslib *
+recursive-include src/sat_mapping/Lib/gsutil/test *
+recursive-include src/sat_mapping/Lib/gsutil/third_party *
+global-exclude .git*
+global-exclude *.py[co]
+global-exclude __pycache__
+prune test
+prune src/sat_mapping/Lib/gsutil/gslib/vendored/boto/bin
+prune src/sat_mapping/Lib/gsutil/gslib/vendored/boto/docs
+prune src/sat_mapping/Lib/gsutil/gslib/vendored/boto/scripts
+exclude src/sat_mapping/Lib/gsutil/gslib/commands/update.py
