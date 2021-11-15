@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 import subprocess
 from os.path import dirname, abspath, realpath, join
 from itertools import cycle as _cycle
