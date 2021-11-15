@@ -1,12 +1,12 @@
 from os import listdir, makedirs
-from os.path import join
+from os.path import join, abspath, realpath
 from typing import List
 
 
 class Paths:
 
     def __init__(self, base_path: str):
-        self.base_path = base_path
+        self.base_path = abspath(realpath(base_path))
         self.data_path = join(base_path, "data")
         makedirs(self.data_path, exist_ok=True)
 

@@ -1,44 +1,19 @@
 from __future__ import absolute_import
-import sys
-import logging
+import subprocess
 from os.path import dirname, abspath, realpath, join
-from getopt import getopt
-GSUTIL_DIR = join(dirname(abspath(realpath(__file__))), "gsutil")
+from itertools import cycle as _cycle
+from time import sleep as _sleep
 
-if GSUTIL_DIR not in sys.path:
-    sys.path.append(GSUTIL_DIR)
+_SPINNER = _cycle(['-', '/', '|', '\\'])
 
-from .gsutil.gslib import __main__ as gs_main
+_GSUTIL_DIR = join(dirname(abspath(realpath(__file__))), "gsutil")
 
 
 def gsutil(argv):
-    opts, args = gs_main.opts, gs_main.args
-
-    try:
-        gs_main.context_config.create_context_config(logging.getLogger())
-    except gs_main.context_config.ContextConfigSingletonAlreadyExistsError:
-        pass
-
-    def fake_context_creation(*args):
-        return gs_main.context_config.get_context_config()
-
-    config_creator = gs_main.context_config.create_context_config
-    gs_main.context_config.create_context_config = fake_context_creation
-
-    o, a = getopt(argv, 'dDvo:?h:i:u:mq', [
-        'debug', 'detailedDebug', 'version', 'option', 'help', 'header',
-        'impersonate-service-account=', 'multithreaded', 'quiet',
-        'testexceptiontraces', 'trace-token=', 'perf-trace-token='
-    ])
-
-    while len(opts) > 0:
-        opts.pop()
-    while len(args) > 0:
-        args.pop()
-    for option in o:
-        opts.append(option)
-    for argument in a:
-        args.append(argument)
-    gs_main.main()
-
-    gs_main.context_config.create_context_config = config_creator
+    gsutil_runner = subprocess.Popen(["python", join(_GSUTIL_DIR, "gsutil")] + argv)
+    command_str = " ".join(["gsutil"] + argv)
+    while gsutil_runner.poll() is None:
+        _sleep(0.5)
+        print(f"{command_str} {next(_SPINNER)}", end='\r')
+    done = "DONE" if gsutil_runner.returncode == 0 else "FAILED"
+    print(f"{command_str} {done}")

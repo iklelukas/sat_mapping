@@ -1,7 +1,8 @@
+import gzip
 from datetime import datetime
 from time import process_time
 from os.path import isfile, isdir, join
-from os import system, makedirs, getenv
+from os import system, makedirs, getenv, name as os_name
 from typing import List, Union
 from ..Lib import gsutil
 from ..Util import Paths
@@ -26,6 +27,11 @@ SPINNER = cycle(["-", "\\", "|", "/"])
 
 # Time format : 2020-06-04T04:18:22.187000Z (UTC)
 TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
+ENV_HOME = "HOME" if os_name != "nt" else "HOMEPATH"
+
+
+def _decode_line(line: bytes) -> str:
+    return line.decode("utf-8").rstrip()
 
 
 def download(path: Paths,
@@ -41,27 +47,24 @@ def download(path: Paths,
     url_file = f"urls_{tiles_str}_{years_str}" + months_str + ".txt"
 
     # if gsutil is not configured, configure it. (might not work on Windows)
-    if not (isdir(join(getenv("HOME"), ".gsutil")) or isfile(join(getenv("HOME"), ".boto"))):
+    if not isfile(join(getenv(ENV_HOME), ".boto")):
         gsutil(["config"])
 
     # Check if an index file for the specified time/tile exists
     if not isfile(join(base_path, url_file)):
 
-        # Download and Unzip index file
-        if not isfile(join(base_path, "index.csv")):
+        # Download index file
+        if not (isfile(join(base_path, "index.csv.gz")) or isfile(join(base_path, "index.csv"))):
             print("DOWNLOADING SENTINEL INDEX")
             gsutil(["cp", "gs://gcp-public-data-sentinel-2/index.csv.gz", base_path])
-            print("UNZIPPING...")
-            command = "gunzip {}".format(join(base_path, "index.csv"))
-            system(command)
 
         # Read the index file line wise
         print(f"FILTER index for {tiles} {years} {months}")
-        with open(join(base_path, "index.csv"), "r") as f:
+        with gzip.open(join(base_path, "index.csv.gz"), "rb") as f:
 
             # Get Column information from the first line.
-            line = f.readline()
-            column_names = line[:-1].split(",")
+            line = _decode_line(f.readline())
+            column_names = line.split(",")
             year_index = column_names.index("SENSING_TIME")
             tile_index = column_names.index("MGRS_TILE")
             url_index = column_names.index("BASE_URL")
@@ -72,7 +75,7 @@ def download(path: Paths,
                 if process_time() - time > 0.7:
                     print(f"READING INDEX FILE: {SPINNER.__next__()}", end="\r")
                     time = process_time()
-                line = f.readline()
+                line = _decode_line(f.readline())
                 items = line.split(",")
                 try:
                     date = datetime.strptime(items[year_index], TIME_FORMAT)
@@ -95,7 +98,7 @@ def download(path: Paths,
 
     # Download the previously specified data
     for url in urls:
-        if not isdir(join(base_path, "data", url.split("/")[-1][:-1])):
-            gsutil(["-m", "cp", "-r", url[:-1], join(base_path, "data")])
+        if not isdir(join(base_path, "data", url.split("/")[-1])):
+            gsutil(["-m", "cp", "-r", url, join(base_path, "data")])
 
 

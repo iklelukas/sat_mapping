@@ -8,7 +8,7 @@ from sat_mapping import FolderData, folders_time_frame, Paths, download
 if __name__ == '__main__':
     plt.switch_backend("TkAgg")
     plt.ion()
-    paths = Paths("/home/cyberman/data/sentinel2")
+    paths = Paths(".")
     download(paths, years=[2019], tiles=["32TMT"], months=[7])
     after = datetime(2019, 6, 6)
     before = datetime(2019, 8, 8)
