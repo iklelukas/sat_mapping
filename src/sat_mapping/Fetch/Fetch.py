@@ -87,8 +87,8 @@ def download(path: Paths,
                     print(line)
 
         # Save for future use.
-        with open(join(base_path, url_file), "w", encoding="utf-8") as f:
-            f.writelines(urls)
+        with open(join(base_path, url_file), "w") as f:
+            f.writelines([url + "\n" for url in urls])
     else:
         with open(join(base_path, url_file), "rb") as f:
             urls = [_decode_line(line) for line in f.readlines()]
