@@ -22,15 +22,20 @@ class FolderMetaData:
     @staticmethod
     def from_folder_name(name: str):
         # example name "S2A_MSIL1C_20191007T103021_N0208_R108_T32TMT_20191007T123034.SAFE"
-        segments = name.split("_")
-        date = segments[-1]
-        date_format = re.compile(r"^(\d{4})(\d{2})(\d{2}).*")
-        img_info_format = re.compile(r"^N(\d+)?.R(\d+)")
-        matches = re.match(date_format, date)
-        y, m, d = [int(matches.group(i)) for i in [1, 2, 3]]
-        matches = re.match(img_info_format, segments[-4] + segments[-3])
-        n, r = [int(matches.group(i)) for i in [1, 2]]
-        tile = segments[-2]
+        date_format = re.compile(r"^.*MSI.{3}_(\d{4})(\d{2})(\d{2}).*")
+        img_info_format = re.compile(r"^.*_N(\d+)?.R(\d+)_.*")
+        matches_date = re.match(date_format, name)
+        matches_nr = re.match(img_info_format, name)
+
+        try:
+            y, m, d = [int(matches_date.group(i)) for i in [1, 2, 3]]
+            n, r = [int(matches_nr.group(i)) for i in [1, 2]]
+        except Exception as e:
+            print(f"{e}:: couldn't parse {name}")
+            y, m, d = (0, 0, 0)
+            n, r = (0, 0)
+
+        tile = name.split("_")[-2]
         return FolderMetaData(y, m, d, n, r, tile)
 
 
