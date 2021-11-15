@@ -6,12 +6,12 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 DEPENDENCIES = [
     "numpy",
-    "Glymur",
+    "Glymur"
 ]
 
 setuptools.setup(
     name="sat-mapping-cyborg-ai",
-    version="0.0.30",
+    version="0.0.31",
     author="Lukas Ikle",
     author_email="lukas.ikle@itweet.ch",
     description="A package to fetch sentinel 2 Satellite data from Google.",
@@ -24,7 +24,7 @@ setuptools.setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: POSIX :: Linux'",
+        "Operating System :: OS Independent",
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
