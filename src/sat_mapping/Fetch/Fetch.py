@@ -87,11 +87,11 @@ def download(path: Paths,
                     print(line)
 
         # Save for future use.
-        with open(join(base_path, url_file), "w") as f:
+        with open(join(base_path, url_file), "w", encoding="utf-8") as f:
             f.writelines(urls)
     else:
-        with open(join(base_path, url_file), "r") as f:
-            urls = f.readlines()
+        with open(join(base_path, url_file), "rb") as f:
+            urls = [_decode_line(line) for line in f.readlines()]
 
     if not isdir(join(base_path, "data")):
         makedirs(join(base_path, "data"), exist_ok=True)
