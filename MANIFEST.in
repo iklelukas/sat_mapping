@@ -7,6 +7,9 @@ include src/sat_mapping/Lib/gsutil/VERSION
 include src/sat_mapping/Lib/gsutil/gsutil
 include src/sat_mapping/Lib/gsutil/gsutil.py
 include src/sat_mapping/Lib/gsutil/setup.py
+include LICENSE
+include README.md
+include setup.py
 recursive-include src/sat_mapping/Lib/gsutil/gslib *
 recursive-include src/sat_mapping/Lib/gsutil/test *
 recursive-include src/sat_mapping/Lib/gsutil/third_party *
