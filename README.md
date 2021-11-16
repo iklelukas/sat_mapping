@@ -30,7 +30,10 @@
   
     ```
 
-- Start the Download. (Note: One year needs around 110 GB Disk Space.)    
+- Start the Download. (Note: One year needs around 110 GB Disk Space.)
+  > The download uses gsutil so if there is no gsutil configuration (.boto) in your home directory, 
+  > gsutil config will be called to generate one.
+  > Gsutil config asks the user for a token and a project id.
 
     ```python 
     download(paths, years=[2019], tiles=["32TMT"], months=[7])
