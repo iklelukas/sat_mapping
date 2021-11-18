@@ -1,7 +1,7 @@
 # Sentinel 2 Data Fetcher
 
 <a href="https://pypi.python.org/pypi/sat-mapping-cyborg-ai" rel="nofollow">
-<img alt="pypi" src="https://img.shields.io/badge/pypi-0.0.36-success">
+<img alt="pypi" src="https://img.shields.io/badge/pypi-0.0.37-success">
 </a>
 
 ## Installation
