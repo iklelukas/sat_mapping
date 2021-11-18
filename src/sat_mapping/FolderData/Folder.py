@@ -42,11 +42,15 @@ class FolderMetaData:
 class FolderData:
 
     def __init__(self, folder_name: str,
-                 upper_left: Tuple[float, float] = (0.0, 0.0),
-                 lower_right: Tuple[float, float] = (109800.0, 109800.0)):
+                 edge_1: Tuple[float, float] = (0.0, 0.0),
+                 edge_2: Tuple[float, float] = (109800.0, 109800.0)):
         self.meta = FolderMetaData.from_folder_name(folder_name)
-        self.x_indices = (int(upper_left[0] // 10), int(lower_right[0] // 10))
-        self.y_indices = (int(upper_left[1] // 10), int(lower_right[1] // 10))
+        x_low = (min(int(edge_1[0] // 10), int(edge_2[0] // 10)))
+        x_high = (max(int(edge_1[0] // 10), int(edge_2[0] // 10)))
+        y_low = (min(int(edge_1[1] // 10), int(edge_2[1] // 10)))
+        y_high = (max(int(edge_1[1] // 10), int(edge_2[1] // 10)))
+        self.x_indices = (x_low, x_high)
+        self.y_indices = (y_low, y_high)
         self._folder = folder_name
         self._img_path = join(self._folder, f"GRANULE/{listdir(join(self._folder, 'GRANULE'))[0]}/IMG_DATA")
         self._img_names = listdir(self._img_path)
